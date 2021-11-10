@@ -1,20 +1,19 @@
-import { combineReducers } from "redux";
-import { all } from "redux-saga/effects";
+import { combineReducers } from 'redux';
+import { all, fork } from 'redux-saga/effects';
+import beerReducer from './beerReducer';
 
 //watcher saga -> actions -> worker saga
 // import loading from "./loading";
-import { enableES5 } from "immer";
 
-enableES5();
+import beerSaga from './beerSaga';
 
 const rootReducer = combineReducers({
+  beerReducer,
 });
 
-// export default rootReducer;
 export default rootReducer;
 
 //wathcer saga
 export function* rootSaga() {
-  yield all([
-  ]);
+  yield all([fork(beerSaga)]);
 }
