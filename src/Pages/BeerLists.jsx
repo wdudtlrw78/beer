@@ -1,44 +1,74 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import MaterialTable from 'material-table';
+import Modal from '../components/Modal';
+import MaterialTable, { MTableBodyRow } from 'material-table';
 import tableIcons from '../utils/tableIcons';
 import { useSelector, useDispatch } from 'react-redux';
-import { LOAD_BEERLISTS_REQUEST } from '../Modules/beerReducer';
+import {
+  LOAD_BEERLISTS_REQUEST,
+  ON_COLUMN_DRAGGED_REQUEST,
+} from '../Modules/beerReducer';
+import { Link } from 'react-router-dom';
 
 const BeerLists = () => {
   const dispatch = useDispatch();
-  // const [Data, setData] = useState([]);
-  const { beerList } = JSON.parse(
+
+  const [beerInfo, setBeerInfo] = useState([]);
+  const [showBeerInfoModal, setShowBeerInfoModal] = useState(false);
+  const { beerList, loadBeerListsLoading, column } = JSON.parse(
     JSON.stringify(useSelector((state) => state.beerReducer))
   );
+
   useEffect(() => {
     dispatch({
       type: LOAD_BEERLISTS_REQUEST,
     });
   }, []);
 
-  const onColumnDragged = useCallback((sourceIndex, destinationIndex) => {
-    console.log(sourceIndex, destinationIndex);
+  const onColumnDragged = (sourceIndex, destinationIndex) => {
+    dispatch({
+      type: ON_COLUMN_DRAGGED_REQUEST,
+      data: {
+        sourceIndex,
+        destinationIndex,
+      },
+    });
+  };
+
+  const onRowClick = useCallback((e, rowData) => {
+    setShowBeerInfoModal(true);
+    setBeerInfo(rowData);
   }, []);
 
+  if (loadBeerListsLoading)
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignlists: 'center',
+          height: '100vh',
+        }}
+      >
+        로드 중...
+      </div>
+    );
+
   return (
-    <div style={{ maxWidth: '100%' }}>
-      <MaterialTable
-        columns={[
-          { title: 'Name', field: 'name' },
-          {
-            title: 'Image',
-            field: 'image_url',
-            render: (item) => <img src={item.image_url} alt="" width="50" />,
-          },
-          { title: 'abv', field: 'abv' },
-        ]}
-        data={beerList}
-        title="Beer Lists"
-        icons={tableIcons}
-        options={{ search: false, sorting: false, paginationType: 'stepped' }}
-        onColumnDragged={onColumnDragged}
-      />
-    </div>
+    <>
+      <Link to="/home">home</Link>
+      <div style={{ maxWidth: '100%' }}>
+        <MaterialTable
+          columns={column}
+          data={beerList}
+          title="Beer Lists"
+          icons={tableIcons}
+          options={{ search: false, sorting: false, paginationType: 'stepped' }}
+          onColumnDragged={onColumnDragged}
+          onRowClick={onRowClick}
+        />
+      </div>
+      {showBeerInfoModal && <Modal list={beerInfo} />}
+    </>
   );
 };
 
