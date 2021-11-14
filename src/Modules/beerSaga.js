@@ -29,7 +29,7 @@ function* loadBeerLists() {
   } catch (error) {
     yield put({
       type: LOAD_BEERLISTS_FAILURE,
-      error: error.reseponse.data,
+      error: error.response.data,
     });
   }
 }
@@ -44,7 +44,7 @@ function* onColumnDragged(action) {
   } catch (error) {
     yield put({
       type: ON_COLUMN_DRAGGED_FAILURE,
-      error: error.reseponse.data,
+      error: error.response.data,
     });
   }
 }
@@ -59,7 +59,7 @@ function* updateAbvFilter(action) {
   } catch (error) {
     yield put({
       type: UPDATE_ABV_FILTER_FAILURE,
-      error: error.reseponse.data,
+      error: error.response.data,
     });
   }
 }
@@ -74,7 +74,7 @@ function* addToCart(action) {
   } catch (error) {
     yield put({
       type: ADD_TO_CART_FAILURE,
-      error: error.reseponse.data,
+      error: error.response.data,
     });
   }
 }
@@ -89,7 +89,7 @@ function* removeProductItem(action) {
   } catch (error) {
     yield put({
       type: REMOVE_PRODUCT_ITEM_FAILURE,
-      error: error.reseponse.data,
+      error: error.response.data,
     });
   }
 }
