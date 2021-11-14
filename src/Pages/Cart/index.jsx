@@ -46,7 +46,7 @@ const Cart = () => {
           </THead>
           <TBody>
             {cart?.map((product) => (
-              <tr key={product._id}>
+              <tr key={product.list.id}>
                 <td width="25%">{product.list.name}</td>
                 <td width="25%">
                   <img
