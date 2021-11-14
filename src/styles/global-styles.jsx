@@ -1,8 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
-
-
   * {
     box-sizing: border-box;
     margin: 0;
@@ -39,9 +37,6 @@ const GlobalStyle = createGlobalStyle`
     -webkit-box-shadow: none;
     box-shadow: none; 
   }
-
-
-
 `;
 
 export default GlobalStyle;

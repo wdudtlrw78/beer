@@ -1,6 +1,6 @@
 import { Add, Remove } from '@material-ui/icons';
 import React, { useCallback, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { ADD_TO_CART_REQUEST } from '../../Modules/beerReducer';
 import {
   Abv,
@@ -17,10 +17,9 @@ import {
   TopGroup,
 } from './styles';
 
-const Modal = ({ list, showBeerInfoModal }) => {
+const BeerDetailModal = ({ list, showBeerInfoModal }) => {
   const dispatch = useDispatch();
 
-  const { cart } = useSelector((state) => state.beerReducer);
   const [totalQuantity, setTotalQuantity] = useState(0);
 
   const onClickRemoveButton = useCallback(() => {
@@ -75,7 +74,7 @@ const Modal = ({ list, showBeerInfoModal }) => {
         <img src={list.image_url} alt={list.image_url} />
       </TopGroup>
       <BottomGroup>
-        <h3>{list.name}</h3>
+        <h2>{list.name}</h2>
         <p>{list.tagline}</p>
         <p>{list.description}</p>
       </BottomGroup>
@@ -102,4 +101,4 @@ const Modal = ({ list, showBeerInfoModal }) => {
   );
 };
 
-export default Modal;
+export default BeerDetailModal;

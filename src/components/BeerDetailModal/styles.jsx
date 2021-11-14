@@ -61,6 +61,7 @@ export const BottomGroup = styled.div`
 
   & p {
     color: ${(props) => props.theme.color.gray};
+    font-weight: 300;
   }
 
   & p:nth-child(2) {
@@ -70,9 +71,10 @@ export const BottomGroup = styled.div`
 
   & p:nth-child(3) {
     margin-top: 1rem;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: bold;
     color: ${(props) => props.theme.color.primary};
+    line-height: 1.75;
   }
 `;
 

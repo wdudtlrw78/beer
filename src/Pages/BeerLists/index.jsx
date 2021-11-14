@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import Modal from '../../components/Modal';
+import BeerDetailModal from '../../components/BeerDetailModal';
 import MaterialTable from 'material-table';
 import tableIcons from '../../utils/tableIcons';
 import { useSelector, useDispatch } from 'react-redux';
@@ -16,17 +16,16 @@ import {
   Container,
   Dimmed,
   Header,
-  ModalContainer,
+  AbvModalContainer,
 } from './styles';
 
 const BeerLists = () => {
   const dispatch = useDispatch();
 
   const [beerInfo, setBeerInfo] = useState([]);
-  // const [filterList, setFilterList] = useState([]);
   const [showBeerInfoModal, setShowBeerInfoModal] = useState(false);
   const [showAbvFilterModal, setShowAbvFilterModal] = useState(false);
-  const { loadBeerListsLoading, columns, beerLists, cart, filterList } =
+  const { loadBeerListsLoading, columns, beerLists, filterList, cart } =
     JSON.parse(JSON.stringify(useSelector((state) => state.beerReducer)));
 
   useEffect(() => {
@@ -113,7 +112,7 @@ const BeerLists = () => {
             ABV Filter
           </button>
 
-          <ModalContainer showAbvFilterModal={showAbvFilterModal}>
+          <AbvModalContainer showAbvFilterModal={showAbvFilterModal}>
             {showAbvFilterModal &&
               abv.map((item) => (
                 <li key={item._id}>
@@ -133,7 +132,7 @@ const BeerLists = () => {
                   <label htmlFor={item.name}>{item.name}</label>
                 </li>
               ))}
-          </ModalContainer>
+          </AbvModalContainer>
         </AbvContainer>
 
         <MaterialTable
@@ -157,7 +156,10 @@ const BeerLists = () => {
 
         {showBeerInfoModal && (
           <>
-            <Modal list={beerInfo} showBeerInfoModal={setShowBeerInfoModal} />
+            <BeerDetailModal
+              list={beerInfo}
+              showBeerInfoModal={setShowBeerInfoModal}
+            />
             <Dimmed onClick={onRowClick}></Dimmed>
           </>
         )}

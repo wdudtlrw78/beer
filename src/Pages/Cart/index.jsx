@@ -30,7 +30,9 @@ const Cart = () => {
 
       {cart.length === 0 ? (
         <Container>
-          <p>The product list is empty.</p>
+          <p style={{ color: '#939FA5', fontSize: '0.875rem' }}>
+            The product list is empty.
+          </p>
         </Container>
       ) : (
         <Table>

@@ -41,7 +41,7 @@ export const AbvContainer = styled.div`
   }
 `;
 
-export const ModalContainer = styled.ul`
+export const AbvModalContainer = styled.ul`
   width: 8.75rem;
   padding-left: 0.5rem;
   background: #fff;

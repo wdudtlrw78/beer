@@ -125,11 +125,10 @@ const reducer = (state = initalState, action) =>
         draft.updateAbvFilterLoading = false;
         draft.updateAbvFilterDone = true;
 
-        const newFilterList = action.data.checked
-          ? [...draft.filterList, { ...action.data.dataset }]
-          : draft.filterList.filter(
-              (item) => item.min !== action.data.dataset.min
-            );
+        const { checked, dataset } = action.data;
+        const newFilterList = checked
+          ? [...draft.filterList, { ...dataset }]
+          : draft.filterList.filter((item) => item.min !== dataset.min);
         draft.filterList = newFilterList;
 
         break;
