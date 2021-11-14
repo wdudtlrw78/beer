@@ -13,9 +13,13 @@ export const initalState = {
   updateAbvFilterDone: false,
   updateAbvFilterError: null,
 
-  addToCartLoading: false, // Cart Add
+  addToCartLoading: false, // Add Cart
   addToCartDone: false,
   addToCartError: null,
+
+  removeProductItemLoading: false, // Remove Item
+  removeProductItemDone: false,
+  removeProductItemError: null,
 
   beerLists: [],
   columns: [
@@ -71,6 +75,10 @@ export const UPDATE_ABV_FILTER_FAILURE = 'UPDATE_ABV_FILTER_FAILURE';
 export const ADD_TO_CART_REQUEST = 'ADD_TO_CART_REQUEST';
 export const ADD_TO_CART_SUCCESS = 'ADD_TO_CART_SUCCESS';
 export const ADD_TO_CART_FAILURE = 'ADD_TO_CART_FAILURE';
+
+export const REMOVE_PRODUCT_ITEM_REQUEST = 'REMOVE_PRODUCT_ITEM_REQUEST';
+export const REMOVE_PRODUCT_ITEM_SUCCESS = 'REMOVE_PRODUCT_ITEM_SUCCESS';
+export const REMOVE_PRODUCT_ITEM_FAILURE = 'REMOVE_PRODUCT_ITEM_FAILURE';
 
 const reducer = (state = initalState, action) =>
   produce(state, (draft) => {
@@ -151,6 +159,25 @@ const reducer = (state = initalState, action) =>
       case ADD_TO_CART_FAILURE:
         draft.addToCartLoading = false;
         draft.addToCartError = action.error;
+        break;
+      case REMOVE_PRODUCT_ITEM_REQUEST:
+        draft.removeProductItemLoading = true;
+        draft.removeProductItemDone = false;
+        draft.removeProductItemError = null;
+        break;
+      case REMOVE_PRODUCT_ITEM_SUCCESS:
+        draft.removeProductItemLoading = false;
+        draft.removeProductItemDone = true;
+
+        const index = draft.cart.findIndex(
+          (item) => item.list.id === action.data
+        );
+        if (index > -1) draft.cart.splice(index, 1);
+
+        break;
+      case REMOVE_PRODUCT_ITEM_FAILURE:
+        draft.removeProductItemLoading = false;
+        draft.removeProductItemError = action.error;
         break;
       default:
         break;

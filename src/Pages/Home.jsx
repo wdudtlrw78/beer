@@ -1,6 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const imageFade = keyframes`
+  50% {
+    transform: rotate(45deg);
+  }
+
+  100% {
+    transform: rotate(-45deg);
+  }
+`;
 
 const Container = styled.section`
   height: 100vh;
@@ -23,7 +33,7 @@ const ButtonContainer = styled.div`
     margin-bottom: 1rem;
   }
 
-  & span {
+  & p {
     color: #323d45;
     font-size: 0.875rem;
     font-weight: bold;
@@ -32,8 +42,9 @@ const ButtonContainer = styled.div`
   &:hover {
     border: 1px solid #66aa74;
     transition: all 0.3s ease-in-out;
+    animation: ${imageFade} 2s infinite alternate;
 
-    & span {
+    & p {
       color: #66aa74;
       transition: all 0.3s ease-in-out;
     }
@@ -46,7 +57,7 @@ const Home = () => {
       <Link to="/beerlist">
         <ButtonContainer>
           <img src="https://images.punkapi.com/v2/5.png" alt="logo" />
-          <span>Go see beer lists</span>
+          <p>Go see beer lists</p>
         </ButtonContainer>
       </Link>
     </Container>

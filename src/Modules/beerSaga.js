@@ -13,6 +13,9 @@ import {
   ADD_TO_CART_REQUEST,
   ADD_TO_CART_SUCCESS,
   ADD_TO_CART_FAILURE,
+  REMOVE_PRODUCT_ITEM_REQUEST,
+  REMOVE_PRODUCT_ITEM_SUCCESS,
+  REMOVE_PRODUCT_ITEM_FAILURE,
 } from './beerReducer';
 
 function* loadBeerLists() {
@@ -76,6 +79,21 @@ function* addToCart(action) {
   }
 }
 
+function* removeProductItem(action) {
+  try {
+    yield delay(1000);
+    yield put({
+      type: REMOVE_PRODUCT_ITEM_SUCCESS,
+      data: action.data,
+    });
+  } catch (error) {
+    yield put({
+      type: REMOVE_PRODUCT_ITEM_FAILURE,
+      error: error.reseponse.data,
+    });
+  }
+}
+
 function* watchBeerLists() {
   yield takeLatest(LOAD_BEERLISTS_REQUEST, loadBeerLists);
 }
@@ -92,11 +110,16 @@ function* watchAddtoCart() {
   yield takeLatest(ADD_TO_CART_REQUEST, addToCart);
 }
 
+function* watchRemoveProductItem() {
+  yield takeLatest(REMOVE_PRODUCT_ITEM_REQUEST, removeProductItem);
+}
+
 export default function* beerSaga() {
   yield all([
     fork(watchBeerLists),
     fork(watchColumnDragged),
     fork(watchAbvFilter),
     fork(watchAddtoCart),
+    fork(watchRemoveProductItem),
   ]);
 }

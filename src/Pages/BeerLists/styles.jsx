@@ -67,8 +67,6 @@ export const ModalContainer = styled.ul`
   }
 `;
 
-export const TableContainer = styled.div``;
-
 export const Dimmed = styled.div`
   position: fixed;
   top: 0;

@@ -17,7 +17,7 @@ import {
   TopGroup,
 } from './styles';
 
-const Modal = ({ list }) => {
+const Modal = ({ list, setShowBeerInfoModal }) => {
   const dispatch = useDispatch();
 
   const [totalQuantity, setTotalQuantity] = useState(0);
@@ -38,13 +38,29 @@ const Modal = ({ list }) => {
   }, []);
 
   const onClickAddToCart = useCallback(() => {
-    dispatch({
-      type: ADD_TO_CART_REQUEST,
-      data: {
-        list: { ...list, totalQuantity },
-      },
-    });
-  }, [list, totalQuantity]);
+    if (totalQuantity === 0) {
+      alert('Please add the number.');
+    } else {
+      dispatch({
+        type: ADD_TO_CART_REQUEST,
+        data: {
+          list,
+          totalQuantity,
+        },
+      });
+
+      setShowBeerInfoModal((status) => {
+        if (status) {
+          document.body.style.overflow = 'auto';
+        } else {
+          document.body.style.overflow = 'hidden';
+        }
+        return !status;
+      });
+
+      alert('It has been added to the shopping basket.');
+    }
+  }, [list, totalQuantity, setShowBeerInfoModal]);
   return (
     <Container>
       <TopGroup>

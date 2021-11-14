@@ -8,6 +8,7 @@ import {
   ON_COLUMN_DRAGGED_REQUEST,
   UPDATE_ABV_FILTER_REQUEST,
 } from '../../Modules/beerReducer';
+import Loading from '../../components/Loading';
 import { Link } from 'react-router-dom';
 import abv from '../../utils/data';
 import {
@@ -16,8 +17,6 @@ import {
   Dimmed,
   Header,
   ModalContainer,
-  ModalDetailContainer,
-  TableContainer,
 } from './styles';
 
 const BeerLists = () => {
@@ -74,25 +73,14 @@ const BeerLists = () => {
     });
   }, []);
 
-  if (loadBeerListsLoading)
-    return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignlists: 'center',
-          height: '100vh',
-        }}
-      >
-        로드 중...
-      </div>
-    );
+  if (loadBeerListsLoading) return <Loading />;
 
   return (
     <Container>
       <>
         <Header>
           <Link to="/home">Home</Link>
+          <Link to="/beerlist">BeerLists</Link>
           <Link to="/cart">Cart({cart.length})</Link>
         </Header>
 
@@ -125,29 +113,31 @@ const BeerLists = () => {
           </ModalContainer>
         </AbvContainer>
 
-        <TableContainer style={{ maxWidth: '100%' }}>
-          <MaterialTable
-            columns={columns}
-            data={beerLists}
-            title="Beer Lists"
-            icons={tableIcons}
-            options={{
-              search: false,
-              sorting: false,
-              paginationType: 'stepped',
-              headerStyle: {
-                backgroundColor: '#66aa74',
-                color: '#fff',
-                fontSize: '1rem',
-              },
-            }}
-            onColumnDragged={onColumnDragged}
-            onRowClick={onRowClick}
-          />
-        </TableContainer>
+        <MaterialTable
+          columns={columns}
+          data={beerLists}
+          title="Beer Lists"
+          icons={tableIcons}
+          options={{
+            search: false,
+            sorting: false,
+            paginationType: 'stepped',
+            headerStyle: {
+              backgroundColor: '#66aa74',
+              color: '#fff',
+              fontSize: '1rem',
+            },
+          }}
+          onColumnDragged={onColumnDragged}
+          onRowClick={onRowClick}
+        />
+
         {showBeerInfoModal && (
           <>
-            <Modal list={beerInfo} />
+            <Modal
+              list={beerInfo}
+              setShowBeerInfoModal={setShowBeerInfoModal}
+            />
             <Dimmed onClick={onRowClick}></Dimmed>
           </>
         )}
