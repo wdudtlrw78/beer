@@ -13,26 +13,47 @@ export const initalState = {
   updateAbvFilterDone: false,
   updateAbvFilterError: null,
 
-  beerLists: [], // 맥주 리스트들
+  addToCartLoading: false, // Cart Add
+  addToCartDone: false,
+  addToCartError: null,
 
+  beerLists: [],
   columns: [
-    // 칼럼 헤드 리스트들
     {
       title: 'Name',
       field: 'name',
+      cellStyle: {
+        fontSize: '0.875rem',
+        color: '#323D45',
+      },
     },
     {
       title: 'Tagline',
       field: 'tagline',
+      cellStyle: {
+        fontSize: '0.875rem',
+        color: '#323D45',
+      },
     },
     {
       title: 'First_Brewed',
       field: 'first_brewed',
+      cellStyle: {
+        fontSize: '0.875rem',
+        color: '#323D45',
+      },
     },
-    { title: 'ABV', field: 'abv' },
+    {
+      title: 'ABV',
+      field: 'abv',
+      cellStyle: {
+        fontSize: '0.875rem',
+        color: '#323D45',
+      },
+    },
   ],
-
   abvChecked: [],
+  cart: [],
 };
 
 export const LOAD_BEERLISTS_REQUEST = 'LOAD_BEERLISTS_REQUEST';
@@ -46,6 +67,10 @@ export const ON_COLUMN_DRAGGED_FAILURE = 'ON_COLUMN_DRAGGED_FAILURE';
 export const UPDATE_ABV_FILTER_REQUEST = 'UPDATE_ABV_FILTER_REQUEST';
 export const UPDATE_ABV_FILTER_SUCCESS = 'UPDATE_ABV_FILTER_SUCCESS';
 export const UPDATE_ABV_FILTER_FAILURE = 'UPDATE_ABV_FILTER_FAILURE';
+
+export const ADD_TO_CART_REQUEST = 'ADD_TO_CART_REQUEST';
+export const ADD_TO_CART_SUCCESS = 'ADD_TO_CART_SUCCESS';
+export const ADD_TO_CART_FAILURE = 'ADD_TO_CART_FAILURE';
 
 const reducer = (state = initalState, action) =>
   produce(state, (draft) => {
@@ -72,6 +97,7 @@ const reducer = (state = initalState, action) =>
       case ON_COLUMN_DRAGGED_SUCCESS:
         draft.onColumnDraggedLoading = false;
         draft.onColumnDraggedDone = true;
+
         const destinationIndex = draft.columns[action.data.destinationIndex];
         const sourceIndex = draft.columns[action.data.sourceIndex];
         draft.columns[action.data.destinationIndex] = sourceIndex;
@@ -89,10 +115,10 @@ const reducer = (state = initalState, action) =>
       case UPDATE_ABV_FILTER_SUCCESS:
         draft.updateAbvFilterLoading = false;
         draft.updateAbvFilterDone = true;
-
         // check true
         if (action.data.checked) {
-          draft.abvChecked.push(action.data);
+          draft.abvChecked = [...draft.abvChecked, action.data];
+          // check false
         } else {
           // 중복제거
           const index = draft.abvChecked.findIndex(
@@ -102,10 +128,29 @@ const reducer = (state = initalState, action) =>
           if (index > -1) draft.abvChecked.splice(index, 1);
         }
 
+        draft.beerLists = draft.beerLists.filter(
+          (v) =>
+            v.abv >= action.data.item.array[0] &&
+            v.abv <= action.data.item.array[1]
+        );
         break;
       case UPDATE_ABV_FILTER_FAILURE:
         draft.updateAbvFilterLoading = false;
         draft.updateAbvFilterError = action.error;
+        break;
+      case ADD_TO_CART_REQUEST:
+        draft.addToCartLoading = true;
+        draft.addToCartDone = false;
+        draft.addToCartError = null;
+        break;
+      case ADD_TO_CART_SUCCESS:
+        draft.addToCartLoading = false;
+        draft.addToCartDone = true;
+        draft.cart = [...draft.cart, action.data];
+        break;
+      case ADD_TO_CART_FAILURE:
+        draft.addToCartLoading = false;
+        draft.addToCartError = action.error;
         break;
       default:
         break;
