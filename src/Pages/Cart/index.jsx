@@ -1,8 +1,7 @@
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { REMOVE_PRODUCT_ITEM_REQUEST } from '../../Modules/beerReducer';
-
 import { Header } from '../BeerLists/styles';
 import { Container, Table, TBody, THead } from './styles';
 
@@ -24,7 +23,9 @@ const Cart = () => {
       <Header>
         <Link to="/home">Home</Link>
         <Link to="/beerlist">BeerLists</Link>
-        <Link to="/cart">Cart({cart.length})</Link>
+        <NavLink to="/cart" activeStyle={{ color: '#66aa74' }}>
+          Cart({cart.length})
+        </NavLink>
       </Header>
 
       {cart.length === 0 ? (

@@ -22,6 +22,8 @@ export const initalState = {
   removeProductItemError: null,
 
   beerLists: [],
+  filterList: [],
+
   columns: [
     {
       title: 'Name',
@@ -56,7 +58,6 @@ export const initalState = {
       },
     },
   ],
-  abvChecked: [],
   cart: [],
 };
 
@@ -123,24 +124,14 @@ const reducer = (state = initalState, action) =>
       case UPDATE_ABV_FILTER_SUCCESS:
         draft.updateAbvFilterLoading = false;
         draft.updateAbvFilterDone = true;
-        // check true
-        if (action.data.checked) {
-          draft.abvChecked = [...draft.abvChecked, action.data];
-          // check false
-        } else {
-          // 중복제거
-          const index = draft.abvChecked.findIndex(
-            (item) => item.item.name === action.data.value
-          );
 
-          if (index > -1) draft.abvChecked.splice(index, 1);
-        }
+        const newFilterList = action.data.checked
+          ? [...draft.filterList, { ...action.data.dataset }]
+          : draft.filterList.filter(
+              (item) => item.min !== action.data.dataset.min
+            );
+        draft.filterList = newFilterList;
 
-        draft.beerLists = draft.beerLists.filter(
-          (v) =>
-            v.abv >= action.data.item.array[0] &&
-            v.abv <= action.data.item.array[1]
-        );
         break;
       case UPDATE_ABV_FILTER_FAILURE:
         draft.updateAbvFilterLoading = false;
@@ -154,6 +145,7 @@ const reducer = (state = initalState, action) =>
       case ADD_TO_CART_SUCCESS:
         draft.addToCartLoading = false;
         draft.addToCartDone = true;
+
         draft.cart = [...draft.cart, action.data];
         break;
       case ADD_TO_CART_FAILURE:

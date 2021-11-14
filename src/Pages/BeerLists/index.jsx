@@ -9,7 +9,7 @@ import {
   UPDATE_ABV_FILTER_REQUEST,
 } from '../../Modules/beerReducer';
 import Loading from '../../components/Loading';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import abv from '../../utils/data';
 import {
   AbvContainer,
@@ -23,10 +23,10 @@ const BeerLists = () => {
   const dispatch = useDispatch();
 
   const [beerInfo, setBeerInfo] = useState([]);
-  // const [beerLists, setBeerLists] = useState([]);
+  // const [filterList, setFilterList] = useState([]);
   const [showBeerInfoModal, setShowBeerInfoModal] = useState(false);
   const [showAbvFilterModal, setShowAbvFilterModal] = useState(false);
-  const { loadBeerListsLoading, columns, abvChecked, beerLists, cart } =
+  const { loadBeerListsLoading, columns, beerLists, cart, filterList } =
     JSON.parse(JSON.stringify(useSelector((state) => state.beerReducer)));
 
   useEffect(() => {
@@ -61,17 +61,36 @@ const BeerLists = () => {
     setShowAbvFilterModal((prev) => !prev);
   }, []);
 
-  const onToggleCheck = useCallback((item, e) => {
-    let { currentTarget: input } = e;
-
-    const value = input.value;
-    const checked = input.checked;
-
+  const onToggleCheck = useCallback((checked, dataset) => {
     dispatch({
       type: UPDATE_ABV_FILTER_REQUEST,
-      data: { item, value, checked },
+      data: { checked, dataset },
     });
   }, []);
+
+  const dataFilter = useCallback((data, filterList) => {
+    if (filterList.length === 0) {
+      return data;
+    }
+    const result = data.filter(({ abv }) => {
+      let isEligible = false;
+      filterList.forEach(({ min, max }) => {
+        if (max) {
+          if (+min <= abv && +max > abv) {
+            isEligible = true;
+          }
+        } else {
+          if (+min <= abv) {
+            isEligible = true;
+          }
+        }
+      });
+      return isEligible;
+    });
+    return result;
+  }, []);
+
+  const filterData = dataFilter(beerLists, filterList);
 
   if (loadBeerListsLoading) return <Loading />;
 
@@ -80,7 +99,9 @@ const BeerLists = () => {
       <>
         <Header>
           <Link to="/home">Home</Link>
-          <Link to="/beerlist">BeerLists</Link>
+          <NavLink to="/beerlist" activeStyle={{ color: '#66aa74' }}>
+            BeerLists
+          </NavLink>
           <Link to="/cart">Cart({cart.length})</Link>
         </Header>
 
@@ -100,12 +121,14 @@ const BeerLists = () => {
                     type="checkbox"
                     name={item.name}
                     value={item.name}
+                    data-min={item.min}
+                    data-max={item.max}
                     checked={
-                      abvChecked.findIndex(
-                        (value) => value.item.name === item.name
-                      ) >= 0
+                      !!filterList.find((filter) => +filter.min === item.min)
                     }
-                    onChange={(e) => onToggleCheck(item, e)}
+                    onChange={(e) =>
+                      onToggleCheck(e.target.checked, e.target.dataset)
+                    }
                   />
                   <label htmlFor={item.name}>{item.name}</label>
                 </li>
@@ -115,7 +138,7 @@ const BeerLists = () => {
 
         <MaterialTable
           columns={columns}
-          data={beerLists}
+          data={filterData}
           title="Beer Lists"
           icons={tableIcons}
           options={{
@@ -134,10 +157,7 @@ const BeerLists = () => {
 
         {showBeerInfoModal && (
           <>
-            <Modal
-              list={beerInfo}
-              setShowBeerInfoModal={setShowBeerInfoModal}
-            />
+            <Modal list={beerInfo} showBeerInfoModal={setShowBeerInfoModal} />
             <Dimmed onClick={onRowClick}></Dimmed>
           </>
         )}

@@ -32,24 +32,26 @@ export const BeerCategory = styled.div`
 
 export const Abv = styled.div`
   background: #f2f2f2;
-  padding: 0.5rem;
+  padding: 0.5rem 0.75rem;
   border-radius: 1rem;
   font-size: 0.75rem;
   font-weight: bold;
 
   & span {
+    font-weight: 400;
     font-size: 0.5rem;
   }
 `;
 
 export const FirstBrewed = styled.div`
   background: #f2f2f2;
-  padding: 0.5rem;
+  padding: 0.5rem 0.75rem;
   border-radius: 1rem;
   font-size: 0.75rem;
   font-weight: bold;
 
   & span {
+    font-weight: 400;
     font-size: 0.5rem;
   }
 `;

@@ -1,6 +1,6 @@
 import { Add, Remove } from '@material-ui/icons';
 import React, { useCallback, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ADD_TO_CART_REQUEST } from '../../Modules/beerReducer';
 import {
   Abv,
@@ -17,9 +17,10 @@ import {
   TopGroup,
 } from './styles';
 
-const Modal = ({ list, setShowBeerInfoModal }) => {
+const Modal = ({ list, showBeerInfoModal }) => {
   const dispatch = useDispatch();
 
+  const { cart } = useSelector((state) => state.beerReducer);
   const [totalQuantity, setTotalQuantity] = useState(0);
 
   const onClickRemoveButton = useCallback(() => {
@@ -49,7 +50,7 @@ const Modal = ({ list, setShowBeerInfoModal }) => {
         },
       });
 
-      setShowBeerInfoModal((status) => {
+      showBeerInfoModal((status) => {
         if (status) {
           document.body.style.overflow = 'auto';
         } else {
@@ -57,10 +58,9 @@ const Modal = ({ list, setShowBeerInfoModal }) => {
         }
         return !status;
       });
-
       alert('It has been added to the shopping basket.');
     }
-  }, [list, totalQuantity, setShowBeerInfoModal]);
+  }, [list, totalQuantity, showBeerInfoModal]);
   return (
     <Container>
       <TopGroup>
